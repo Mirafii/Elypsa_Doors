@@ -14,11 +14,15 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 
 public class RightClickListener implements Listener {
 
+    private Random rand;
+
     public RightClickListener() {
 
+        rand = new Random();
 
     }
 
@@ -53,11 +57,20 @@ public class RightClickListener implements Listener {
                                 }
                                 if (!goodName) {
                                     //Si il y a un coffre, et que le nom n'est pas dans la liste, on cancell l'event
-                                    if(p.getInventory().getItemInMainHand().getType() == Material.TRIPWIRE_HOOK) {
-                                        p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount()-1);
-                                        p.sendMessage(ChatColor.BLUE + "** Votre outil se brise après une utilisation fructueuse. **");
-                                    } else {
+                                    if (p.getInventory().getItemInMainHand().getType() == Material.TRIPWIRE_HOOK) {
 
+                                        int alea = rand.nextInt(4);
+                                        if (alea == 1) {
+
+                                            p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount() - 1);
+                                            p.sendMessage(ChatColor.BLUE + "** Votre outil se brise après une utilisation fructueuse. **");
+                                        } else {
+                                            p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount() - 1);
+                                            p.sendMessage(ChatColor.BLUE + "** Votre outil se brise dans vos mains. **");
+                                            e.setCancelled(true);
+
+                                        }
+                                    } else {
                                         e.setCancelled(true);
                                         p.sendMessage(ChatColor.BLUE + "** La porte est verrouillée. **");
                                     }
@@ -70,9 +83,7 @@ public class RightClickListener implements Listener {
                     }
                 } else if (isChest(b)) {
 
-                    System.out.println("chest");
                     if (b.getState() instanceof Container) { //pas vraiment nécessaire mais bon
-                        System.out.println("container");
 
                         Inventory i = ((Container) b.getState()).getInventory();
 
@@ -80,7 +91,6 @@ public class RightClickListener implements Listener {
 
                         boolean goodName = false;
                         if (!paperList.isEmpty()) {
-                            System.out.println("pas empty");
 
                             Iterator<? extends ItemStack> it = paperList.values().iterator();
                             ItemStack item;
@@ -91,16 +101,22 @@ public class RightClickListener implements Listener {
                                 }
                             }
                             if (!goodName) {
+                                if (p.getInventory().getItemInMainHand().getType() == Material.TRIPWIRE_HOOK) {
 
-                                if(p.getInventory().getItemInMainHand().getType() == Material.TRIPWIRE_HOOK) {
-                                    p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount()-1);
-                                    p.sendMessage(ChatColor.BLUE + "** Votre outil se brise après une utilisation fructueuse. **");
+                                    int alea = rand.nextInt(4);
+                                    if (alea == 1) {
+
+                                        p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount() - 1);
+                                        p.sendMessage(ChatColor.BLUE + "** Votre outil se brise après une utilisation fructueuse. **");
+                                    } else {
+                                        p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount() - 1);
+                                        p.sendMessage(ChatColor.BLUE + "** Votre outil se brise dans vos mains. **");
+                                        e.setCancelled(true);
+
+                                    }
                                 } else {
-
-                                    //Si il y a un coffre, et que le nom n'est pas dans la liste, on cancell l'event
                                     e.setCancelled(true);
                                     p.sendMessage(ChatColor.BLUE + "** C'est verrouillé. **");
-
                                 }
                             }
                         }
@@ -108,6 +124,7 @@ public class RightClickListener implements Listener {
                 }
             }
         }
+
     }
 
 
